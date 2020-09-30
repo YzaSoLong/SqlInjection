@@ -1,0 +1,19 @@
+1.cookie 17
+2.read  1.5
+3.decode 1.4
+
+判断页面：
+页面大小:通用
+页面内容：
+
+# #有可能是len(r.content)用长度，也有可能是用一些页面的关键字
+        # if 'bool' not in r.content:
+        #     result+=chr(j)
+        #     print(result)
+        #     break
+
+页面标签：
+  soup = BeautifulSoup(a, 'html.parser')
+
+        print(len(soup.find_all("td")))
+        print(len(a))
