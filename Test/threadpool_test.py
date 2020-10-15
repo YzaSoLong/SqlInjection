@@ -1,6 +1,6 @@
-import urllib, time, threading
+import urllib
 from urllib import request
-from data import glovar, glofun
+from global_data import glovar, glofun
 from urllib import request
 from concurrent.futures import ThreadPoolExecutor
 

