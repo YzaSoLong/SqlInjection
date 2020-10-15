@@ -41,32 +41,6 @@ def get_coname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
                 url_read = glofun.url_request(full_payload, cookie)
 
                 url_read_length = len(url_read)
-                #
-                # if k == 1:
-                #
-                #     if response_length < url_read_length:
-                #
-                #         response_length = url_read_length
-                #
-                #         coname = chr(int(j))
-                #
-                #     continue
-                #
-                # if (response_length - url_read_length) < 50:
-                #
-                #     if j == '0':
-                #
-                #         coname_list.append(coname)
-                #
-                #         print(coname)
-                #
-                #         coname = ""
-                #
-                #         break
-                #
-                #     coname += chr(int(j))
-                #
-                #     print(coname)
 
                 if (url_read_length - response_length) > 50:
 
@@ -104,10 +78,11 @@ def get_coname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
             break
 
     print(coname_list)
+    return coname_list
 
 
 if __name__ == "__main__":
 
-    #get_coname(url=glovar.url3)
+    get_coname(url=glovar.url3,tbname='comment')
 
-    get_coname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies',cocount=7)
+    #get_coname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies',cocount=7)

@@ -7,7 +7,7 @@ from urllib import request
 from data import glovar, glofun
 
 
-def get_tbname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?search=1', cookie=False, type='search',
+def get_tbname(url=glovar.url3, cookie=False, type='search',
                     dbname='zvuldrill', tbcount=10):
 
     response_length = 0
@@ -87,6 +87,8 @@ def get_tbname(url='http://192.168.52.128/test2/zvuldrill-master/search.php?sear
 
     print(tbname_list)
 
+    return tbname_list
+
 def get_dbname_test2(cookie=glovar.cookie):
 
     response_length = 0
@@ -113,8 +115,6 @@ def get_dbname_test2(cookie=glovar.cookie):
     url_read_length = len(url_read)
 
     print(url_read_length)
-
-
 
 
 if __name__ == "__main__":
