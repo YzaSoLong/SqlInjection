@@ -1,2 +1,0 @@
-#LWP-Cookies-2.0
-Set-Cookie3: security_session_verify=048dfdb8473c1e3ed20edafccd59d9c1; path="/"; domain="www.jobbole.com"; path_spec; expires="2020-09-26 17:43:27Z"; HttpOnly=None; version=0
